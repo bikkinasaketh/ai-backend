@@ -1,47 +1,41 @@
-package com.aiinterview.aiinterviewbackend.entity;
+package com.aiinterview.aiinterviewbackend.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "interviews")
-public class Interview {
+public class AdminInterviewResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String userName;
 
-    @Column(nullable = false, length = 100)
+    private String userEmail;
+
     private String topic;
 
-    @Column(nullable = false, length = 50)
     private String difficulty;
 
-    @Column(nullable = false)
     private int score;
 
-    @Column(nullable = false)
     private int totalQuestions;
 
-    @Column(nullable = false)
     private LocalDateTime completedAt;
 
-    public Interview() {
+    public AdminInterviewResponse() {
     }
 
-    public Interview(
-            User user,
+    public AdminInterviewResponse(
+            Long id,
+            String userName,
+            String userEmail,
             String topic,
             String difficulty,
             int score,
             int totalQuestions,
             LocalDateTime completedAt
     ) {
-        this.user = user;
+        this.id = id;
+        this.userName = userName;
+        this.userEmail = userEmail;
         this.topic = topic;
         this.difficulty = difficulty;
         this.score = score;
@@ -57,12 +51,20 @@ public class Interview {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getTopic() {
