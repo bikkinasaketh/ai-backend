@@ -28,7 +28,6 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-
     // =========================================================
     // CONSTRUCTOR
     // =========================================================
@@ -39,7 +38,6 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter =
                 jwtAuthenticationFilter;
     }
-
 
     // =========================================================
     // SECURITY FILTER CHAIN
@@ -52,18 +50,17 @@ public class SecurityConfig {
 
         http
 
-                // -------------------------------------------------
+                // =================================================
                 // DISABLE CSRF
-                // -------------------------------------------------
+                // =================================================
 
                 .csrf(csrf ->
                         csrf.disable()
                 )
 
-
-                // -------------------------------------------------
+                // =================================================
                 // ENABLE CORS
-                // -------------------------------------------------
+                // =================================================
 
                 .cors(cors ->
                         cors.configurationSource(
@@ -71,10 +68,9 @@ public class SecurityConfig {
                         )
                 )
 
-
-                // -------------------------------------------------
-                // STATELESS REST API
-                // -------------------------------------------------
+                // =================================================
+                // STATELESS SESSION
+                // =================================================
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
@@ -82,16 +78,14 @@ public class SecurityConfig {
                         )
                 )
 
-
-                // -------------------------------------------------
+                // =================================================
                 // AUTHORIZATION
-                // -------------------------------------------------
+                // =================================================
 
                 .authorizeHttpRequests(auth -> auth
 
-
                         // =================================================
-                        // SWAGGER / OPENAPI
+                        // SWAGGER
                         // =================================================
 
                         .requestMatchers(
@@ -102,7 +96,6 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-
                         // =================================================
                         // HEALTH CHECK
                         // =================================================
@@ -111,7 +104,6 @@ public class SecurityConfig {
                                 "/healthz"
                         )
                         .permitAll()
-
 
                         // =================================================
                         // USER LOGIN + SIGNUP
@@ -123,7 +115,6 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-
                         // =================================================
                         // ADMIN LOGIN + REGISTER
                         // =================================================
@@ -134,11 +125,8 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-
                         // =================================================
                         // ADMIN APIs
-                        // =================================================
-                        // Only ROLE_ADMIN can access.
                         // =================================================
 
                         .requestMatchers(
@@ -146,11 +134,8 @@ public class SecurityConfig {
                         )
                         .hasRole("ADMIN")
 
-
                         // =================================================
                         // USER APIs
-                        // =================================================
-                        // Only ROLE_USER can access.
                         // =================================================
 
                         .requestMatchers(
@@ -158,11 +143,8 @@ public class SecurityConfig {
                         )
                         .hasRole("USER")
 
-
                         // =================================================
                         // INTERVIEW APIs
-                        // =================================================
-                        // User must be authenticated.
                         // =================================================
 
                         .requestMatchers(
@@ -170,18 +152,14 @@ public class SecurityConfig {
                         )
                         .authenticated()
 
-
                         // =================================================
                         // AI APIs
-                        // =================================================
-                        // User must be authenticated.
                         // =================================================
 
                         .requestMatchers(
                                 "/api/ai/**"
                         )
                         .authenticated()
-
 
                         // =================================================
                         // CORS PREFLIGHT
@@ -193,29 +171,25 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-
                         // =================================================
-                        // EVERYTHING ELSE
+                        // OTHER REQUESTS
                         // =================================================
 
                         .anyRequest()
                         .authenticated()
                 )
 
-
-                // -------------------------------------------------
+                // =================================================
                 // JWT FILTER
-                // -------------------------------------------------
+                // =================================================
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
 
-
         return http.build();
     }
-
 
     // =========================================================
     // CORS CONFIGURATION
@@ -227,15 +201,20 @@ public class SecurityConfig {
         CorsConfiguration configuration =
                 new CorsConfiguration();
 
+        // =========================================================
+        // ALLOWED FRONTENDS
+        // =========================================================
 
         configuration.setAllowedOrigins(
                 Arrays.asList(
                         "http://localhost:5173",
-                        "https://ai-interviw.netlify.app",
-                        "https://ai-intervi.netlify.app"
+                        "https://aiinte.netlify.app"
                 )
         );
 
+        // =========================================================
+        // ALLOWED METHODS
+        // =========================================================
 
         configuration.setAllowedMethods(
                 Arrays.asList(
@@ -248,33 +227,42 @@ public class SecurityConfig {
                 )
         );
 
+        // =========================================================
+        // ALLOWED HEADERS
+        // =========================================================
 
         configuration.setAllowedHeaders(
                 Arrays.asList("*")
         );
 
+        // =========================================================
+        // EXPOSED HEADERS
+        // =========================================================
 
         configuration.setExposedHeaders(
                 Arrays.asList("*")
         );
 
+        // =========================================================
+        // CREDENTIALS
+        // =========================================================
 
         configuration.setAllowCredentials(true);
 
+        // =========================================================
+        // REGISTER CORS CONFIGURATION
+        // =========================================================
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
-
 
         source.registerCorsConfiguration(
                 "/**",
                 configuration
         );
 
-
         return source;
     }
-
 
     // =========================================================
     // PASSWORD ENCODER
